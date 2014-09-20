@@ -57,62 +57,13 @@ public class Login extends Activity {
                 Log.v("Creds", "email: " + email);
                 Log.v("Creds", "pass: " + pass);
                 String url = formURL(email, pass);
-                String result = "";
-                new GetLoginData().execute(url, result);
-                Log.d("jsonResult", jsonResult.toString());
-                if(Login.this.jsonResult.get(0).equals("true")){
-                    new GetData().execute(url);
-                } else {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Login credentials invalid.", Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
+                new GetData().execute(url);
+
+            };
         });
     }
 
-    private class GetLoginData extends AsyncTask<String, Void, JSONObject> {
-
-        @Override
-        protected JSONObject doInBackground(String... params) {
-            String response;
-
-            try {
-                HttpClient httpclient = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(params[0]);
-
-                HttpResponse httpResponse = httpclient.execute(httpGet);
-                HttpEntity httpEntity = httpResponse.getEntity();
-
-                response = EntityUtils.toString(httpEntity);
-                Login.this.jsonResult.add(0, response);
-                Log.d("response is", response);
-
-                return new JSONObject(response);
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONObject result)
-        {
-            super.onPostExecute(result);
-            try {
-                JSONObject output = result.getJSONObject("valid");
-                Log.d("GetLogin onPost", result.getString("valid"));
-                Login.this.jsonResult.add(0, result.getString("valid"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    private class GetData extends AsyncTask<String, Void, JSONObject> {
+     private class GetData extends AsyncTask<String, Void, JSONObject> {
 
         String JSONstring = "";
         @Override
