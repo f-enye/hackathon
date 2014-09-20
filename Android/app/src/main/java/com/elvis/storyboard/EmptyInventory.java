@@ -11,7 +11,7 @@ public class EmptyInventory extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.empty_inventory);
+        setContentView(R.layout.inventory);
         Bundle extras = getIntent().getExtras();
     }
 }
