@@ -94,4 +94,4 @@ def LoadUser(id):
 
 def UserValidation(user_name, password):
 	user = User.query.filter_by(user_name=user_name).first()
-	return (if user is not None and password == user.password)
+	return (user is not None and password == user.password)
