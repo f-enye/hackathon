@@ -12,5 +12,6 @@ public class EmptyInventory extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.empty_inventory);
+        Bundle extras = getIntent().getExtras();
     }
 }

@@ -2,6 +2,7 @@ package com.elvis.storyboard;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,27 +13,25 @@ import android.widget.EditText;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 
 
 public class Login extends Activity {
+
+    private String jsonResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +48,53 @@ public class Login extends Activity {
                 String email = username.getText().toString();
                 String pass = password.getText().toString();
 
-                Log.e("Creds", "email: " + email);
-                Log.e("Creds", "pass: " + pass);
+                Log.v("Creds", "email: " + email);
+                Log.v("Creds", "pass: " + pass);
                 String url = formURL(email, pass);
-
+                new GetData().execute(url);
             }
         });
     }
 
+    private class GetData extends AsyncTask<String, Void, JSONObject> {
+
+        String JSONstring = "";
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            String response;
+
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(params[0]);
+                HttpResponse responce = httpclient.execute(httppost);
+                HttpEntity httpEntity = responce.getEntity();
+
+                response = EntityUtils.toString(httpEntity);
+                JSONstring = response;
+                Log.d("response is", response);
+
+                return new JSONObject(response);
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject result)
+        {
+            super.onPostExecute(result);
+            Intent intent = new Intent(getBaseContext(), EmptyInventory.class);
+            intent.putExtra("JSON_RESULT", JSONstring);
+            startActivity(intent);
+        }
+    }
+
+
     public String formURL(String email, String pass){
-        StringBuilder url = new StringBuilder("http://162.243.220.197/login/");
+        StringBuilder url = new StringBuilder("http://www.porktrack.com/login/");
         url = url.append(email + "/" + pass);
         return url.toString();
     }
