@@ -1,12 +1,16 @@
 package com.elvis.storyboard;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import org.json.JSONObject;
 
 
 public class Login extends Activity {
@@ -17,22 +21,29 @@ public class Login extends Activity {
         setContentView(R.layout.activity_login);
 
         Button login = (Button) findViewById(R.id.loginButton);
-        EditText username = (EditText) findViewById(R.id.username);
-        EditText password = (EditText) findViewById(R.id.password);
-        final String email = username.getText().toString();
-        final String pass = password.getText().toString();
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                formURL(email, pass);
+                EditText username = (EditText) findViewById(R.id.username);
+                EditText password = (EditText) findViewById(R.id.password);
 
+                String email = username.getText().toString();
+                String pass = password.getText().toString();
+
+                Log.e("Creds", "email: " + email);
+                Log.e("Creds", "pass: " + pass);
+                String url = formURL(email, pass);
+                JSONObject jsonobject;
+                jsonobject = JSONfunctions.getJSONfromURL(url);
+                System.out.print(jsonobject);
             }
         });
     }
 
+
     public String formURL(String email, String pass){
-        StringBuilder url = new StringBuilder("www.example.com/?");
-        url = url.append("email=" + email + "&pass=" + pass);
+        StringBuilder url = new StringBuilder("162.243.220.197/login/");
+        url = url.append(email + "/" + pass);
         return url.toString();
     }
 
