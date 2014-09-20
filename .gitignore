@@ -52,3 +52,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Flask
+*.db
+secret_key_config.py
