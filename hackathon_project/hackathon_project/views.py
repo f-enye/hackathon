@@ -1,36 +1,8 @@
-from flask import render_template, url_for, redirect, g, request, flash, jsonify
+from flask import render_template, url_for, redirect, g, request, flash
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from hackathon_project import app, db, lm
 from forms import LoginForm, SignupForm
 from models import User
-
-#################Message Handling Functions################
-@app.route('/login/<user_name>/<password>')
-def LoginRESTful(user_name, password):
-	if UserValidation(user_name, password):
-		return jsonify({'valid': True})
-	else:
-		return jsonify({'valid': False})
-
-@app.route('/signup/<user_name>/<password>')
-def SignupRESTful(user_name, password):
-	user = User(user_name=user_name, password=password)
-	try:
-		if user is not None:
-			db.session.add(user)
-			db.session.commit()
-			return jsonify({'status': 'SUCCESS'})
-		else:
-			return jsonify({'status': 'ERROR'})
-	except:
-		return jsonify({'status': 'ERROR'})
-
-@app.route('/submitAudioFile/<user_name>/<password>/<audio_file>')
-def SubmitAudioFile(user_name, password, audio_file):
-	if UserValidation(user_name, password):
-		return jsonify({'valid': True})
-	else:
-		return jsonify({'valid': False})
 
 
 #################Template Rendering Functions##############
@@ -91,7 +63,3 @@ def BeforeRequest():
 @lm.user_loader
 def LoadUser(id):
 	return User.query.get(int(id))
-
-def UserValidation(user_name, password):
-	user = User.query.filter_by(user_name=user_name).first()
-	return (if user is not None and password == user.password)
