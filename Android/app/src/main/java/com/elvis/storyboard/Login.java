@@ -86,7 +86,7 @@ public class Login extends Activity {
         protected void onPostExecute(JSONObject result)
         {
             super.onPostExecute(result);
-            Intent intent = new Intent(getBaseContext(), EmptyInventory.class);
+            Intent intent = new Intent(getBaseContext(), Inventory.class);
             intent.putExtra("JSON_RESULT", JSONstring);
             startActivity(intent);
         }
