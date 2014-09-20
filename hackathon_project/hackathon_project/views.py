@@ -3,34 +3,43 @@ from flask.ext.login import login_user, logout_user, current_user, login_require
 from hackathon_project import app, db, lm
 from forms import LoginForm, SignupForm
 from models import User
+import os
 
 #################Message Handling Functions################
-@app.route('/login/<user_name>/<password>')
-def LoginRESTful(user_name, password):
-	if UserValidation(user_name, password):
-		return jsonify({'valid': True})
-	else:
-		return jsonify({'valid': False})
+# @app.route('/login/<user_name>/<password>', methods=['GET'])
+# def LoginRESTful(user_name, password):
+# 	if UserValidation(user_name, password):
+# 		return jsonify({'valid': True})
+# 	else:
+# 		return jsonify({'valid': False})
 
-@app.route('/signup/<user_name>/<password>')
-def SignupRESTful(user_name, password):
-	user = User(user_name=user_name, password=password)
-	try:
-		if user is not None:
-			db.session.add(user)
-			db.session.commit()
-			return jsonify({'status': 'SUCCESS'})
-		else:
-			return jsonify({'status': 'ERROR'})
-	except:
-		return jsonify({'status': 'ERROR'})
+# @app.route('/signup/<user_name>/<password>')
+# def SignupRESTful(user_name, password):
+# 	user = User(user_name=user_name, password=password)
+# 	try:
+# 		if user is not None:
+# 			db.session.add(user)
+# 			db.session.commit()
+# 			return jsonify({'status': 'SUCCESS'})
+# 		else:
+# 			return jsonify({'status': 'ERROR'})
+# 	except:
+# 		return jsonify({'status': 'ERROR'})
 
-@app.route('/submitAudioFile/<user_name>/<password>/<audio_file>')
-def SubmitAudioFile(user_name, password, audio_file):
-	if UserValidation(user_name, password):
-		return jsonify({'valid': True})
-	else:
-		return jsonify({'valid': False})
+@app.route('/submitAudioFile', methods=["POST"])
+@login_required
+def SubmitAudioFileRESTful():
+	file = request.files["file"]
+	if file:
+		fileName = file.filename
+		directory = app.config['UPLOAD_FOLDER'] + "/" + g.user.user_name + "/"
+
+		if not os.path.exists(directory):
+			os.makedirs(directory)
+
+		file.save(os.path.join(directory, fileName))
+		return jsonify({'status': 'SUCCESS'})
+	return jsonify({'status': 'ERROR'});
 
 
 #################Template Rendering Functions##############
@@ -38,7 +47,8 @@ def SubmitAudioFile(user_name, password, audio_file):
 @app.route('/index')
 @login_required
 def Index():
-	return render_template("index.html")
+	form = LoginForm()
+	return render_template("index.html", form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def Login():

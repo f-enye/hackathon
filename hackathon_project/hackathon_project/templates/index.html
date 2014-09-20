@@ -1,6 +1,20 @@
 {% extends "base.html" %}
+
+{% block bundles %}
+	<script type="text/javascript" src="{{ url_for('static', filename='recorderJS/recorder.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='recorderJS/recorderWorker.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/myRecorder.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 	<div class="col-sm-12">
-		<p>Hey there {{g.user.user_name}}</p>
+		<button id="recordButton" type=button class="btn btn-default">
+	        O
+	    </button>
+     	<ul id="recordingslist"></ul>
+		<form id="audioSubmit">
+			{{form.hidden_tag()}}
+			<button id="audioSubmitButton" type="button" class="btn btn-default">Submit</button>
+		</form>
 	</div>
 {% endblock %}

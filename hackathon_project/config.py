@@ -8,3 +8,4 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'hackathon_projec
 
 CSRF_ENABLED = True
 SECRET_KEY = secret_key_config.SECRET_KEY
+UPLOAD_FOLDER = '/home/frank/Desktop/'
