@@ -1,17 +1,15 @@
 package com.elvis.storyboard;
 
-
-
 import android.app.Activity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.content.Context;
 import android.util.Log;
 import android.media.MediaRecorder;
@@ -24,19 +22,27 @@ public class CreateRecording extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_recording);
+
+
+        ImageButton startRecord = (ImageButton) findViewById(R.id.imageButton);
+        startRecord.setOnClickListener(new View.OnClickListener() {
+            boolean on = false;
+            public void onClick(View v) {}
+
+        });
     }
 
 
-    public class AudioRecordTest extends Activity
-    {
-        private static final String LOG_TAG = "AudioRecordTest";
+    public class AudioRecord extends Activity{
+
+        private static final String LOG_TAG = "AudioRecord";
         private String mFileName = null;
 
-        private RecordButton mRecordButton = null;
-        private MediaRecorder mRecorder = null;
+        private RecordButton mRecordButton = new RecordButton(this.getBaseContext());
+        private MediaRecorder mRecorder = new MediaRecorder();
 
-        private PlayButton   mPlayButton = null;
-        private MediaPlayer   mPlayer = null;
+        private PlayButton mPlayButton = new PlayButton(this.getBaseContext());
+        private MediaPlayer mPlayer = new MediaPlayer();
 
         private void onRecord(boolean start) {
             if (start) {
@@ -136,7 +142,7 @@ public class CreateRecording extends Activity {
             }
         }
 
-        public AudioRecordTest() {
+        public AudioRecord() {
             mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
             mFileName += "/audiorecordtest.3gp";
         }
